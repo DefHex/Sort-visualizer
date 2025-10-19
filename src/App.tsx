@@ -45,7 +45,7 @@ export default function App() {
         <div ref={box1Ref} className="bg-lime-500 h-15 text-white box box1">Box 1</div>
         <div ref={box2Ref} className="bg-yellow-500 h-32 text-white box box2">Box 2</div>
       </div>
-      <Button className="swap-btn" onClick={handleSwap}>Swap Boxes</Button>
+      <Button className="swap-btn" onClick={handleSwap}>Swap  Boxes</Button>
     </div>
   );
 }
