@@ -26,11 +26,11 @@ export default function App() {
     const box1 = box1Ref.current;
     const box2 = box2Ref.current;
     const distance = box2?.offsetLeft - box1?.offsetLeft;
-    if (!swapped) {
+    if (swapped) {
+      gsap.to([box1, box2], { x: 0, duration: 0.8, ease: "power2.inOut" });
+    } else {
       gsap.to(box1, { x: distance, duration: 0.8, ease: "power2.inOut" });
       gsap.to(box2, { x: -distance, duration: 0.8, ease: "power2.inOut" });
-    } else {
-      gsap.to([box1, box2], { x: 0, duration: 0.8, ease: "power2.inOut" });
     }
 
     setSwapped(!swapped);
