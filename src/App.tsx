@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import "./App.css";
+import { Button } from "@/components/ui/button"
+
 // Register the plugin
 gsap.registerPlugin(useGSAP);
 
@@ -25,7 +26,9 @@ export default function App() {
   const handleSwap = () => {
     const box1 = box1Ref.current;
     const box2 = box2Ref.current;
-    const distance = box2?.offsetLeft - box1?.offsetLeft;
+    if (!box1 || !box2) return;
+
+    const distance = box2.offsetLeft - box1.offsetLeft;
     if (swapped) {
       gsap.to([box1, box2], { x: 0, duration: 0.8, ease: "power2.inOut" });
     } else {
@@ -37,12 +40,12 @@ export default function App() {
   };
 
   return (
-    <div ref={containerRef} className="app">
-      <div className="boxes">
-        <div ref={box1Ref} className="box box1">Box 1</div>
-        <div ref={box2Ref} className="box box2">Box 2</div>
+    <div ref={containerRef} className="bg-black min-h-screen flex flex-col items-center justify-center gap-8">
+      <div className="flex flex-row  items-end justify-center gap-4">
+        <div ref={box1Ref} className="bg-lime-500 h-15 text-white box box1">Box 1</div>
+        <div ref={box2Ref} className="bg-yellow-500 h-32 text-white box box2">Box 2</div>
       </div>
-      <button className="swap-btn" onClick={handleSwap}>Swap Boxes</button>
+      <Button className="swap-btn" onClick={handleSwap}>Swap Boxes</Button>
     </div>
   );
 }
