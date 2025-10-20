@@ -1,7 +1,6 @@
 import { useRef, useState, type ChangeEvent } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { resolve } from "path";
 // Register the plugin
 gsap.registerPlugin(useGSAP);
 
@@ -13,8 +12,8 @@ export default function App() {
     const text = event.target.value;
     let numbers = text
       .split(",")
-      .map((element) => Number(element))
-      .filter((n) => !isNaN(n))
+      .map(Number)
+      .filter((n) => !Number.isNaN(n))
       .slice(0, 10);
     setArray(numbers);
   };
@@ -77,7 +76,7 @@ export default function App() {
             {array.map((number, index) => {
               return (
                 <div
-                  key={index}
+                  key={"card" + index}
                   ref={(e) => {
                     container.current[index] = e;
                   }}
