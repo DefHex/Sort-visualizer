@@ -28,7 +28,7 @@ class App(ctk.CTk):
             master=self,
             text="Compare different sorting algorithms in action.",
             font=ctk.CTkFont(size=14),
-            text_color="#AAAAAA",
+            text_color="#AAAAAA"
         )
         subtitle.pack(pady=(0, 15))
 
