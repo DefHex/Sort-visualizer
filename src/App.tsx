@@ -17,10 +17,45 @@ export default function App() {
       .slice(0, 10);
     setArray(numbers);
   };
+  // Initial animation with useGSAP
+  const handleSwap = (index1: number = 1, index2: number = 3) => {
+    if (!container.current[index1] || !container.current[index2]) return;
+    const distance =
+      container.current[index2].offsetLeft -
+      container.current[index1].offsetLeft;
 
-  const swap(index1: number, index2: number) {
+    gsap.to(container.current[index1], {
+      x: distance,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.2,
+      ease: "power2.out",
+    });
 
-  }
+    gsap.to(container.current[index2], {
+      x: -distance,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.2,
+      ease: "power2.out",
+    });
+  };
+
+  //   const handleSwap = () => {
+  //     const box1 = box1Ref.current;
+  //     const box2 = box2Ref.current;
+  //     if (!box1 || !box2) return;
+
+  //     const distance = box2.offsetLeft - box1.offsetLeft;
+  //     if (swapped) {
+  //       gsap.to([box1, box2], { x: 0, duration: 0.8, ease: "power2.inOut" });
+  //     } else {
+  //       gsap.to(box1, { x: distance, duration: 0.8, ease: "power2.inOut" });
+  //       gsap.to(box2, { x: -distance, duration: 0.8, ease: "power2.inOut" });
+  //     }
+
+  //     setSwapped(!swapped);
+  //   };
 
   return (
     <div className="Screen flex flex-row gap-2 w-screen h-screen p-2 bg-gray-500">
@@ -35,7 +70,9 @@ export default function App() {
               return (
                 <div
                   key={index}
-                  ref= {e => {container.current[index] = e}}
+                  ref={(e) => {
+                    container.current[index] = e;
+                  }}
                   className="Item w-15 aspect-square bg-cyan-500 rounded-md"
                 >
                   {number}
@@ -43,6 +80,12 @@ export default function App() {
               );
             })}
           </div>
+          <button
+            className="bg-green-300"
+            onClick={() => {
+              handleSwap;
+            }}
+          ></button>
         </div>
       </div>
     </div>
