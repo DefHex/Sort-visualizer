@@ -8,6 +8,7 @@ gsap.registerPlugin(useGSAP);
 
 
 export default function App() {
+  
   const container = useRef<(HTMLDivElement | null)[]>([]);
   const [array, setArray] = useState<number[]>([]);
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -21,14 +22,14 @@ export default function App() {
   };
   // Initial animation with useGSAP
  useGSAP(() => {
-    gsap.from([box1Ref.current, box2Ref.current], {
+    gsap.from([container.current], {
       y: 50,
       opacity: 0,
       duration: 0.8,
       stagger: 0.2,
       ease: "power2.out",
     });
-  }, { scope: containerRef });
+  }, { scope:  });
 
 
   const handleSwap = (index1: number = 1, index2: number = 3) => {
