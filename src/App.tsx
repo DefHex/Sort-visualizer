@@ -1,12 +1,13 @@
 import { useRef, useState, type ChangeEvent } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { resolve } from "path";
 // Register the plugin
 gsap.registerPlugin(useGSAP);
 
-const container = useRef<(HTMLDivElement | null)[]>([]);
-
 export default function App() {
+  const container = useRef<(HTMLDivElement | null)[]>([]);
+
   const [array, setArray] = useState<number[]>([]);
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const text = event.target.value;
@@ -18,44 +19,51 @@ export default function App() {
     setArray(numbers);
   };
   // Initial animation with useGSAP
-  const handleSwap = (index1: number = 1, index2: number = 3) => {
-    if (!container.current[index1] || !container.current[index2]) return;
-    const distance =
-      container.current[index2].offsetLeft -
-      container.current[index1].offsetLeft;
+  const handleSwap = (index1: number, index2: number): Promise<void> => {
+    return new Promise((resolve) => {
+      if (!container.current[index1] || !container.current[index2]) {
+        resolve();
+        return;
+      }
+      const distance =
+        container.current[index2].offsetLeft -
+        container.current[index1].offsetLeft;
 
-    gsap.to(container.current[index1], {
-      x: distance,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: "power2.out",
-    });
+      gsap.to(container.current[index1], {
+        x: distance,
+        duration: 0.8,
+        ease: "power2.out",
+      });
 
-    gsap.to(container.current[index2], {
-      x: -distance,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: "power2.out",
+      gsap.to(container.current[index2], {
+        x: -distance,
+        duration: 0.8,
+        ease: "power2.out",
+        onComplete: () => {
+          gsap.set(container.current[index1], { x: 0 });
+          gsap.set(container.current[index2], { x: 0 });
+          resolve();
+        },
+      });
     });
   };
 
-  //   const handleSwap = () => {
-  //     const box1 = box1Ref.current;
-  //     const box2 = box2Ref.current;
-  //     if (!box1 || !box2) return;
+  const bubble = async () => {
+    let currentArray = [...array];
+    for (let i = 0; i < currentArray.length; i++) {
+      for (let j = 0; j < currentArray.length - i - 1; j++) {
+        if (currentArray[j] > currentArray[j + 1]) {
+          [currentArray[j], currentArray[j + 1]] = [
+            currentArray[j + 1],
+            currentArray[j],
+          ];
 
-  //     const distance = box2.offsetLeft - box1.offsetLeft;
-  //     if (swapped) {
-  //       gsap.to([box1, box2], { x: 0, duration: 0.8, ease: "power2.inOut" });
-  //     } else {
-  //       gsap.to(box1, { x: distance, duration: 0.8, ease: "power2.inOut" });
-  //       gsap.to(box2, { x: -distance, duration: 0.8, ease: "power2.inOut" });
-  //     }
-
-  //     setSwapped(!swapped);
-  //   };
+          await handleSwap(j, j + 1);
+          setArray([...currentArray]);
+        }
+      }
+    }
+  };
 
   return (
     <div className="Screen flex flex-row gap-2 w-screen h-screen p-2 bg-gray-500">
@@ -83,9 +91,11 @@ export default function App() {
           <button
             className="bg-green-300"
             onClick={() => {
-              handleSwap;
+              bubble();
             }}
-          ></button>
+          >
+            Swap
+          </button>
         </div>
       </div>
     </div>
