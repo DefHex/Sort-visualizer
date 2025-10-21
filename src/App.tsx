@@ -8,7 +8,7 @@ gsap.registerPlugin(useGSAP);
 
 
 export default function App() {
-  
+
   const container = useRef<(HTMLDivElement | null)[]>([]);
   const [array, setArray] = useState<number[]>([]);
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +29,7 @@ export default function App() {
       stagger: 0.2,
       ease: "power2.out",
     });
-  }, { scope:  });
+  });
 
 
   const handleSwap = (index1: number = 1, index2: number = 3) => {
@@ -42,15 +42,23 @@ export default function App() {
       x: distance,
       duration: 0.8,
       ease: "power2.out",
+      onComplete: () => {
+        gsap.set(container.current[index1], {x: 0})
+        // [container.current[index1], container.current[index2]] = [container.current[index2], container.current[index1]];
+        // setArray(container.current.map((el) => (el ? Number(el.textContent) : 0)));
+      }
     });
 
     gsap.to(container.current[index2], {
       x: -distance,
       duration: 0.8,
       ease: "power2.out",
+      onComplete: () => {
+        gsap.set(container.current[index2], {x: 0})
+        [container.current[index1], container.current[index2]] = [container.current[index2], container.current[index1]];
+        setArray(container.current.map((el) => (el ? Number(el.textContent) : 0)));
+      }
     });
-    [container.current[index1], container.current[index2]] = [container.current[index2], container.current[index1]];
-    setArray(container.current.map((el) => (el ? Number(el.textContent) : 0)));
   };
 
 
@@ -70,7 +78,7 @@ export default function App() {
                   ref={(e) => {
                     container.current[index] = e;
                   }}
-                  className="Item w-15 aspect-square bg-cyan-500 rounded-md"
+                  className={`Item w-15 aspect-square bg-red-500 rounded-md`}
                 >
                   {number}
                 </div>
