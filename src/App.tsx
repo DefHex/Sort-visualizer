@@ -30,17 +30,25 @@ export default function App() {
 
       gsap.to(container.current[index1], {
         x: distance,
-        duration: 0.8,
+        backgroundColor: "#ec4899",
+        duration: 2,
         ease: "power2.out",
       });
 
       gsap.to(container.current[index2], {
         x: -distance,
-        duration: 0.8,
+        backgroundColor: "#ec4899",
+        duration: 2,
         ease: "power2.out",
         onComplete: () => {
-          gsap.set(container.current[index1], { x: 0 });
-          gsap.set(container.current[index2], { x: 0 });
+          gsap.set(container.current[index1], {
+            x: 0,
+            backgroundColor: "#06b6d4",
+          });
+          gsap.set(container.current[index2], {
+            x: 0,
+            backgroundColor: "#06b6d4",
+          });
           resolve();
         },
       });
@@ -79,6 +87,23 @@ export default function App() {
     }
   };
 
+  const selection = async () => {
+    //copying the useState
+    let curr = [...array];
+    // running selection sort on the copied useState array
+    for (let i = 0; i < curr.length; i++) {
+      let min = i;
+      for (let j = i + 1; j < curr.length; j++) {
+        if (curr[j] < curr[min]) {
+          min = j;
+        }
+      }
+      [curr[i], curr[min]] = [curr[min], curr[i]];
+      await handleSwap(i, min);
+      setArray([...curr]);
+    }
+  };
+
   return (
     <div className="Screen flex flex-row gap-2 w-screen h-screen p-2 bg-gray-500">
       <div className="Side Bar flex flex-col items-center justify-safe w-50 h-full bg-indigo-950 rounded-md">
@@ -91,12 +116,20 @@ export default function App() {
           Bubble Sort
         </button>
         <button
-          className="InsertionSortbg-purple-300"
+          className="InsertionSort bg-purple-300"
           onClick={() => {
             insertion();
           }}
         >
           Insertion Sort
+        </button>
+        <button
+          className="SelectionSort bg-red-300"
+          onClick={() => {
+            selection();
+          }}
+        >
+          Selection Sort
         </button>
       </div>
       <div className="Main flex flex-1 flex-col items-center justify-center h-full p-2 bg-indigo-950 rounded-md">
