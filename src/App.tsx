@@ -104,6 +104,22 @@ export default function App() {
     }
   };
 
+  const shell = async () => {
+    let curr = [...array];
+    let n = curr.length;
+    for (let gap = Math.floor(n); gap > 0; gap = Math.floor(gap / 2)) {
+      for (let i = gap; i < n; i++) {
+        let j = i;
+        while (j >= gap && curr[j - gap] > curr[j]) {
+          [curr[j - gap], curr[j]] = [curr[j], curr[j - gap]];
+          await handleSwap(j - gap, j);
+          setArray([...curr]);
+          j -= gap;
+        }
+      }
+    }
+  };
+
   const cocktail = async () => {
     let curr = [...array];
     let unsorted = true;
@@ -207,15 +223,30 @@ export default function App() {
         >
           Quick Sort
         </button>
+        <button
+          className="SelectionSort bg-lime-600 p-2 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']"
+          onClick={() => {
+            shell();
+          }}
+        >
+          Shell Sort
+        </button>
       </div>
       <div className="Main flex flex-1 flex-col items-center justify-center h-full p-2 border-4 border-black bg-indigo-950">
-        <div className="Input Field flex flex-row place-items-center border-4 border-black gap-2 p-2 bg-gray-500">
-          <input
-            type="text"
-            onChange={handleChange}
-            className="font-['Lexend']"
-          />
+        <div className="Header flex flex-row gap-8">
+          <div className="Input Field flex flex-row place-items-center border-4 border-black gap-2 p-2 bg-gray-500">
+            <input
+              type="text"
+              onChange={handleChange}
+              className="font-['Lexend']"
+            />
+          </div>
+
+          <button className="SelectionSort bg-red-600 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']">
+            Reset
+          </button>
         </div>
+
         <div className="MainBottom flex flex-col items-center justify-center align-middle gap-4 mt-4 w-full h-9/10">
           <div className="Array flex flex-row place-content-evenly border-4 border-black gap-2 p-2 bg-gray-500">
             {array.map((number, index) => {
