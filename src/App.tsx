@@ -143,21 +143,22 @@ export default function App() {
       for (let j = low; j < high; j++) {
         if (arr[j] < pivot) {
           i++;
-
-          [arr[i], arr[j]] = [arr[j], arr[i]];
-          await handleSwap(i, j);
-          setArray([...arr]);
+          [arr[i], arr[j]] = [arr[j], arr[i]]; // update the copy of the useState
+          await handleSwap(i, j); // wait for the animation
+          setArray([...arr]); // update the use state
         }
       }
-      [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
-      await handleSwap(i + 1, high);
-      return i + 1;
+      let pi = i + 1;
+      [arr[pi], arr[high]] = [arr[high], arr[pi]];
+      await handleSwap(pi, high);
+      setArray([...arr]);
+      return pi;
     };
 
     if (low < high) {
-      let pi = await partition(low, high);
-      await quick(arr, low, pi - 1);
-      await quick(arr, pi + 1, high);
+      let pivIndex = await partition(low, high);
+      await quick(arr, low, pivIndex - 1);
+      await quick(arr, pivIndex + 1, high);
     }
   };
 
