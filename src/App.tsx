@@ -14,7 +14,7 @@ export default function App() {
       .split(",")
       .map(Number)
       .filter((n) => !Number.isNaN(n))
-      .slice(0, 10);
+      .slice(0, 15);
     setArray(numbers);
   };
   // Initial animation with useGSAP
@@ -106,30 +106,30 @@ export default function App() {
 
   const cocktail = async () => {
     let curr = [...array];
-    let sorted = false;
+    let unsorted = true;
     let start = 0;
     let end = curr.length;
 
-    while (sorted == false) {
-      sorted = true;
+    while (unsorted) {
+      unsorted = false;
       for (let i = start; i < end - 1; ++i) {
         if (curr[i] > curr[i + 1]) {
           [curr[i], curr[i + 1]] = [curr[i + 1], curr[i]];
           await handleSwap(i, i + 1);
           setArray([...curr]);
-          sorted = false;
+          unsorted = true;
         }
       }
 
-      if (sorted == true) break;
-      sorted = true;
+      if (!unsorted) break;
+      unsorted = false;
       end = end - 1;
       for (let i = end - 1; i >= start; i--) {
         if (curr[i] > curr[i + 1]) {
           [curr[i], curr[i + 1]] = [curr[i + 1], curr[i]];
           await handleSwap(i, i + 1);
           setArray([...curr]);
-          sorted = false;
+          unsorted = true;
         }
       }
       start = start + 1;
@@ -143,9 +143,9 @@ export default function App() {
       for (let j = low; j < high; j++) {
         if (arr[j] < pivot) {
           i++;
-          [arr[i], arr[j]] = [arr[j], arr[i]]; // update the copy of the useState
-          await handleSwap(i, j); // wait for the animation
-          setArray([...arr]); // update the use state
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+          await handleSwap(i, j);
+          setArray([...arr]);
         }
       }
       let pi = i + 1;
