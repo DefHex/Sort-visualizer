@@ -48,25 +48,57 @@ export default function App() {
   };
 
   const bubble = async () => {
-    let currentArray = [...array];
-    for (let i = 0; i < currentArray.length; i++) {
-      for (let j = 0; j < currentArray.length - i - 1; j++) {
-        if (currentArray[j] > currentArray[j + 1]) {
-          [currentArray[j], currentArray[j + 1]] = [
-            currentArray[j + 1],
-            currentArray[j],
-          ];
-
+    //copying the useState
+    let curr = [...array];
+    // running bubble sort on the copied useState array
+    for (let i = 0; i < curr.length; i++) {
+      for (let j = 0; j < curr.length - i - 1; j++) {
+        if (curr[j] > curr[j + 1]) {
+          [curr[j], curr[j + 1]] = [curr[j + 1], curr[j]];
+          // manipulating useRef -> GSAP animation
           await handleSwap(j, j + 1);
-          setArray([...currentArray]);
+          // wait for the animation to finish then update useState
+          setArray([...curr]);
         }
+      }
+    }
+  };
+
+  const insertion = async () => {
+    //copying the useState
+    let curr = [...array];
+    // running insertion sort on the copied useState array
+    for (let i = 1; i < curr.length; i++) {
+      let j = i;
+      while (j > 0 && curr[j] < curr[j - 1]) {
+        [curr[j], curr[j - 1]] = [curr[j - 1], curr[j]];
+        await handleSwap(j, j - 1);
+        setArray([...curr]);
+        j--;
       }
     }
   };
 
   return (
     <div className="Screen flex flex-row gap-2 w-screen h-screen p-2 bg-gray-500">
-      <div className="Side Bar flex flex-col items-center justify-safe w-50 h-full bg-indigo-950 rounded-md"></div>
+      <div className="Side Bar flex flex-col items-center justify-safe w-50 h-full bg-indigo-950 rounded-md">
+        <button
+          className="BubbleSort bg-green-300"
+          onClick={() => {
+            bubble();
+          }}
+        >
+          Bubble Sort
+        </button>
+        <button
+          className="InsertionSortbg-purple-300"
+          onClick={() => {
+            insertion();
+          }}
+        >
+          Insertion Sort
+        </button>
+      </div>
       <div className="Main flex flex-1 flex-col items-center justify-center h-full p-2 bg-indigo-950 rounded-md">
         <div className="Input Field flex flex-row place-items-center gap-2 p-2 bg-gray-500 rounded-md">
           <input type="text" onChange={handleChange} />
@@ -87,14 +119,6 @@ export default function App() {
               );
             })}
           </div>
-          <button
-            className="bg-green-300"
-            onClick={() => {
-              bubble();
-            }}
-          >
-            Swap
-          </button>
         </div>
       </div>
     </div>
