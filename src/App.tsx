@@ -55,7 +55,7 @@ export default function App() {
       ease: "power2.out",
       onComplete: () => {
         gsap.set(container.current[index2], {x: 0})
-        [container.current[index1], container.current[index2]] = [container.current[index2], container.current[index1]];
+        // [container.current[index1], container.current[index2]] = [container.current[index2], container.current[index1]];
         setArray(container.current.map((el) => (el ? Number(el.textContent) : 0)));
       }
     });
