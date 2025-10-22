@@ -24,29 +24,40 @@ export default function App() {
         resolve();
         return;
       }
-      const distance =
-        container.current[index2].offsetLeft -
-        container.current[index1].offsetLeft;
+      const isMobile = window.innerWidth < 768;
+      let distance;
+      let direction;
+      if (isMobile) {
+        direction = "y";
+        distance =
+          container.current[index2].offsetTop -
+          container.current[index1].offsetTop;
+      } else {
+        direction = "x";
+        distance =
+          container.current[index2].offsetLeft -
+          container.current[index1].offsetLeft;
+      }
 
       gsap.to(container.current[index1], {
-        x: distance,
+        [direction]: distance,
         backgroundColor: "#ec4899",
         duration: 2,
         ease: "power2.out",
       });
 
       gsap.to(container.current[index2], {
-        x: -distance,
+        [direction]: -distance,
         backgroundColor: "#ec4899",
         duration: 2,
         ease: "power2.out",
         onComplete: () => {
           gsap.set(container.current[index1], {
-            x: 0,
+            [direction]: 0,
             backgroundColor: "#06b6d4",
           });
           gsap.set(container.current[index2], {
-            x: 0,
+            [direction]: 0,
             backgroundColor: "#06b6d4",
           });
           resolve();
@@ -101,6 +112,22 @@ export default function App() {
       [curr[i], curr[min]] = [curr[min], curr[i]];
       await handleSwap(i, min);
       setArray([...curr]);
+    }
+  };
+
+  const shell = async () => {
+    let curr = [...array];
+    let n = curr.length;
+    for (let gap = Math.floor(n); gap > 0; gap = Math.floor(gap / 2)) {
+      for (let i = gap; i < n; i++) {
+        let j = i;
+        while (j >= gap && curr[j - gap] > curr[j]) {
+          [curr[j - gap], curr[j]] = [curr[j], curr[j - gap]];
+          await handleSwap(j - gap, j);
+          setArray([...curr]);
+          j -= gap;
+        }
+      }
     }
   };
 
@@ -163,10 +190,16 @@ export default function App() {
   };
 
   return (
-    <div className="Screen flex flex-row gap-2 w-screen h-screen p-2 border-4 border-black bg-gray-500">
-      <div className="Side Bar flex flex-col place-content-evenly w-50 h-full p-2 border-4 border-black bg-indigo-950">
+    <div
+      className="Screen flex flex-col gap-2 w-screen h-screen p-2 border-4 border-black bg-gray-500
+                    md:flex-row"
+    >
+      <div
+        className="Side Bar truncate grid grid-rows-2 grid-cols-3 w-full h-50 p-2 border-4 border-black bg-indigo-950
+                      md:flex md:place-content-evenly md:flex-col md:w-50 md:h-full"
+      >
         <button
-          className="BubbleSort bg-purple-400 p-2 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']"
+          className="BubbleSort truncate bg-purple-400 p-2 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']"
           onClick={() => {
             bubble();
           }}
@@ -174,7 +207,7 @@ export default function App() {
           Bubble Sort
         </button>
         <button
-          className="InsertionSort bg-blue-400 p-2 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']"
+          className="InsertionSort truncate bg-blue-400 p-2 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']"
           onClick={() => {
             insertion();
           }}
@@ -182,7 +215,7 @@ export default function App() {
           Insertion Sort
         </button>
         <button
-          className="SelectionSort bg-red-400 p-2 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']"
+          className="SelectionSort truncate  bg-red-400 p-2 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']"
           onClick={() => {
             selection();
           }}
@@ -190,7 +223,7 @@ export default function App() {
           Selection Sort
         </button>
         <button
-          className="SelectionSort bg-amber-400 p-2 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']"
+          className="SelectionSort truncate  bg-amber-400 p-2 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']"
           onClick={() => {
             cocktail();
           }}
@@ -198,7 +231,7 @@ export default function App() {
           Cocktail Sort
         </button>
         <button
-          className="SelectionSort bg-fuchsia-500 p-2 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']"
+          className="SelectionSort truncate bg-fuchsia-500 p-2 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']"
           onClick={async () => {
             let arr = [...array];
             await quick(arr, 0, array.length - 1);
@@ -207,17 +240,35 @@ export default function App() {
         >
           Quick Sort
         </button>
+        <button
+          className="SelectionSort truncate bg-lime-600 p-2 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']"
+          onClick={() => {
+            shell();
+          }}
+        >
+          Shell Sort
+        </button>
       </div>
-      <div className="Main flex flex-1 flex-col items-center justify-center h-full p-2 border-4 border-black bg-indigo-950">
-        <div className="Input Field flex flex-row place-items-center border-4 border-black gap-2 p-2 bg-gray-500">
-          <input
-            type="text"
-            onChange={handleChange}
-            className="font-['Lexend']"
-          />
+      <div className="Main truncate flex flex-1 flex-col items-center justify-center h-full p-2 border-4 border-black bg-indigo-950">
+        <div className="Header flex flex-col items-center justify-center md:flex-row gap-8">
+          <div className="Input Field flex flex-row place-items-center border-4 border-black gap-2 p-2 bg-gray-500">
+            <input
+              type="text"
+              onChange={handleChange}
+              className="font-['Lexend']"
+            />
+          </div>
+
+          <button className="SelectionSort w-20 h-10 bg-red-600 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']">
+            Reset
+          </button>
         </div>
+
         <div className="MainBottom flex flex-col items-center justify-center align-middle gap-4 mt-4 w-full h-9/10">
-          <div className="Array flex flex-row place-content-evenly border-4 border-black gap-2 p-2 bg-gray-500">
+          <div
+            className="Array flex flex-col place-content-evenly border-4 border-black gap-2 p-2 bg-gray-500
+                          md:flex-row"
+          >
             {array.map((number, index) => {
               return (
                 <div
@@ -225,7 +276,7 @@ export default function App() {
                   ref={(e) => {
                     container.current[index] = e;
                   }}
-                  className="Item flex items-center justify-center w-15 aspect-square bg-cyan-500 border-4 border-black truncate text-xs font-['Press_Start_2P']"
+                  className="Item flex items-center justify-center w-8 md:w-15 aspect-square bg-cyan-500 border-4 border-black truncate text-xs font-['Press_Start_2P']"
                 >
                   {number}
                 </div>
