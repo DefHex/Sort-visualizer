@@ -8,14 +8,16 @@ export default function App() {
   const container = useRef<(HTMLDivElement | null)[]>([]);
 
   const [array, setArray] = useState<number[]>([]);
+  const [originalArray, setOriginalArray] = useState<number[]>([]);
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const text = event.target.value;
     let numbers = text
-      .split(",")
+      .split(/[.,; ]+/)
       .map(Number)
       .filter((n) => !Number.isNaN(n))
       .slice(0, 15);
     setArray(numbers);
+    setOriginalArray(numbers);
   };
   // Initial animation with useGSAP
   const handleSwap = (index1: number, index2: number): Promise<void> => {
@@ -253,13 +255,14 @@ export default function App() {
         <div className="Header flex flex-col items-center justify-center md:flex-row gap-8">
           <div className="Input Field flex flex-row place-items-center border-4 border-black gap-2 p-2 bg-gray-500">
             <input
-              type="text"
+              placeholder="Enter numbers"
+              type="tel"
               onChange={handleChange}
               className="font-['Lexend']"
             />
           </div>
 
-          <button className="SelectionSort w-20 h-10 bg-red-600 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']">
+          <button onClick={e=> setArray([...originalArray])} className="SelectionSort w-20 h-10 bg-red-600 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']">
             Reset
           </button>
         </div>
