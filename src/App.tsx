@@ -262,7 +262,7 @@ export default function App() {
             />
           </div>
 
-          <button onClick={e=> setArray([...originalArray])} className="SelectionSort w-20 h-10 bg-red-600 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']">
+          <button onClick={() => setArray([...originalArray])} className="SelectionSort w-20 h-10 bg-red-600 border-4 border-black hover:translate-y-1 active:translate-y-2 font-bold text-xs font-['Press_Start_2P']">
             Reset
           </button>
         </div>
